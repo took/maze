@@ -102,3 +102,7 @@ touch app.log
 tail -f app.log &
 python3 main.py --loglevel DEBUG
 ```
+
+## See also
+You can use this to create more mazes:
+https://pypi.org/project/labyrinth-py/

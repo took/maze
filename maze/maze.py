@@ -20,7 +20,7 @@ class MazeCellColors:
               MazeCell.WALL: (0, 0, 0),  # Black for WALL
               MazeCell.START: (0, 255, 0),  # Green for START
               MazeCell.END: (255, 0, 0),  # Red for END
-              MazeCell.PATH: (0, 0, 124),  # LightBlue for PATH
+              MazeCell.PATH: (0, 205, 255),  # Blue3 for PATH
               MazeCell.VISITED: (255, 255, 197),  # Yellow for VISITED
               MazeCell.HEAD: (0, 0, 255),  # Blue for HEAD
               }
@@ -85,7 +85,7 @@ class Maze:
                         continue
                     if char == " ":
                         row.append(MazeCell.FREE.value)
-                    elif char == "#":
+                    elif char in ["#", "-", "+", "|"]:
                         row.append(MazeCell.WALL.value)
                     elif char == "S":
                         row.append(MazeCell.START.value)
@@ -100,20 +100,44 @@ class Maze:
                             logging.warning(msg)
                             row.append(MazeCell.FREE.value)
                 self.cells.append(row)
+
+        # Validate data and calculate size
         self.size_y = len(self.cells)
         if self.size_y == 0:
             msg = f"No maze cells found." + self._add_log_info(0, 0)
             logging.error(msg, exc_info=True)
             raise ValueError(msg)
         self.size_x = len(self.cells[0])
-        r = 0
+
+        # Ensure equal length of rows (Pad shorter rows with walls)
+        max_length = max(len(row) for row in self.cells)
         for row in self.cells:
-            r += 1
-            if len(row) != self.size_x:
-                msg = (f"Row 1 contains {self.size_x}, row {r} contains {len(row)} fields." +
-                       self._add_log_info(min(self.size_x, len(row)), r))
+            while len(row) < max_length:
+                row.append(MazeCell.WALL.value)
+
+        # Validate that there is exact one starting position and at least one end position
+        # For compatibility with https://pypi.org/project/labyrinth-py/ add a start and end position
+        # in the upper left and lower right corner (with one wall tile to the edge of the world).
+        start_count = sum(row.count(MazeCell.START.value) for row in self.cells)
+        end_count = sum(row.count(MazeCell.END.value) for row in self.cells)
+        if pedantic:
+            if start_count != 1:
+                msg = f"Invalid number of start points: {start_count}. There must be exactly one start point." + self._add_log_info()
                 logging.error(msg, exc_info=True)
                 raise ValueError(msg)
+            if end_count < 1:
+                msg = f"Invalid number of end points: {end_count}. There must be at least one end point." + self._add_log_info()
+                logging.error(msg, exc_info=True)
+                raise ValueError(msg)
+        else:
+            if start_count == 0 and end_count == 0:
+                if self.size_x >= 3 and self.size_y >= 3 and self.size_x + self.size_y > 3 + 4:
+                    if self.cells[1][1] == MazeCell.FREE.value and self.cells[self.size_y - 2][self.size_x - 2] == MazeCell.FREE.value:
+                        msg = "Adding START and END." + self._add_log_info()
+                        logging.info(msg)
+                        self.cells[1][1] = MazeCell.START.value
+                        self.cells[self.size_y - 2][self.size_x - 2] = MazeCell.END.value
+
 
     def set_field(self, col: int, row: int, value: Union[MazeCell, int], delay: int = 10) -> None:
         self._check_bounds(col, row)  # Raises IndexError() on Out-of-Bounds error
