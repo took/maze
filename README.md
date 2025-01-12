@@ -30,34 +30,35 @@ If you'd like to contribute code, feel free to fork the repository and create a 
 To install and run the project, follow these steps:
 
 1. **Clone the repository**:
+
+   Make sure to have Git installed.
+
+   Clone the repository: 
     ```bash
     git clone https://github.com/yourusername/maze.git
     cd maze
     ```
 
 2. **Install dependencies**:
-   If you have `pip` installed, run:
+
+   Make sure to have Python >= 3.11 and pip installed.
+   
+   Install dependencies:
     ```bash
     pip install -r requirements.txt
-    ```
-
-   You may optionally use a virtual environment:
-    ```bash
-    python3 -m venv venv
-    source venv/bin/activate  # On Windows: venv\Scripts\activate
-    pip install -r requirements.txt
-    ```
-
-3. **Run the program**:
-    ```bash
-    python3 main.py
     ```
 
 ## Usage
 
+Start the script:
+ ```bash
+ python3 main.py
+ ```
+
 Once the program is running, a Pygame window will display the progress of the selected search algorithm (recursive
 depth-first and/or breadth-first search) as it navigates through the maze.
 
+### Command line parameter
 You can specify options via command-line
 arguments, see also:
 
@@ -86,4 +87,18 @@ options:
   -vv, --very-verbose   Very verbose output (Default: False)
   -vvv, --very-very-verbose
                         Very very verbose output (Default: False)
+```
+
+Here is an example with a bigger maze and only 20ms delay:
+```
+python3 main.py -d 20 -m mazes/big-maze.txt
+```
+
+### Monitor log file
+
+You may want to monitor the application log file. You can use `tail` running in the background: 
+```bash
+touch app.log
+tail -f app.log &
+python3 main.py --loglevel DEBUG
 ```

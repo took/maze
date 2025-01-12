@@ -26,7 +26,7 @@ class MazeCellColors:
               }
 
     @classmethod
-    def get_color(cls, col):
+    def get_color(cls, col: int):
         if 0 <= col < 7:
             if col == 0:
                 return MazeCellColors.COLORS[MazeCell.FREE]
@@ -161,7 +161,7 @@ class Maze:
     def get_size(self) -> Tuple[int, int]:
         return self.get_width(), self.get_height()
 
-    def _check_bounds(self, col: int, row: int):
+    def _check_bounds(self, col: int, row: int) -> None:
         if not (0 <= row < self.size_y):
             msg = f"Row index {row} is out of bounds (0 <= row < {self.size_y})."
             logging.error(msg, exc_info=True)
@@ -171,7 +171,7 @@ class Maze:
             logging.error(msg, exc_info=True)
             raise IndexError(msg)
 
-    def _add_log_info(self, c: Optional[int] = None, r: Optional[int] = None):
+    def _add_log_info(self, c: Optional[int] = None, r: Optional[int] = None) -> str:
         log_info = f" (In {self.file_name if self.file_name is not None else 'N/A'}"
         if r is not None or c is not None:
             log_info += f", row={r if r is not None else 'N/A'}, column={c if c is not None else 'N/A'}"

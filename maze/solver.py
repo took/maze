@@ -10,7 +10,7 @@ class Pos:
     x: int
     y: int
 
-    def __init__(self, x, y):
+    def __init__(self, x: int, y: int):
         self.x = x
         self.y = y
 
@@ -28,7 +28,7 @@ class Solver(Thread):
         # Initial delay
         sleep(1.0)
 
-        # Keep a backup so the second algorithm kann start on a fresh copy
+        # Keep a backup so the second algorithm can start on a fresh copy
         orig_maze = copy.deepcopy(self.gui.maze)
 
         # Find starting position for recursive search
@@ -65,7 +65,7 @@ class Solver(Thread):
         else:
             print("No solution found")
 
-    def solve_breadth_first(self, x, y):
+    def solve_breadth_first(self, x: int, y: int) -> bool:
         sleep(self.delay)
         if self.gui.maze.get_field(x, y) == MazeCell.END.value:
             return True
@@ -99,7 +99,7 @@ class Solver(Thread):
                 heads.remove(h)
         return False
 
-    def solve_recursive(self, x, y):
+    def solve_recursive(self, x: int, y: int) -> bool:
         if not self.gui.running:
             return False
         sleep(self.delay)

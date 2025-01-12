@@ -67,7 +67,7 @@ def main():
         if args.recursion_limit:
             sys.setrecursionlimit(args.recursion_limit)
     except Exception as err:
-        msg = "A critical error has occurred: %s" % err
+        msg = "Error setting recursion limit: %s" % err
         logging.critical(msg, exc_info=True)
         print(msg)
         raise err
@@ -87,11 +87,12 @@ def main():
         # Run the main loop
         gui.main_loop()
 
-        # After the main loop finished, signal everyone to stop
+        # After the main loop finished, signal everyone to stop a.s.a.p.
         msg = "Shutting down."
         logging.info(msg)
         print(msg)
         gui.running = False
+        solver.delay = 0.0
 
         # Wait for any running threads to stop
         solver.join()
