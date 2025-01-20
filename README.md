@@ -35,7 +35,7 @@ To install and run the project, follow these steps:
 
    Clone the repository: 
     ```bash
-    git clone https://github.com/yourusername/maze.git
+    git clone https://github.com/took/maze.git
     cd maze
     ```
 
